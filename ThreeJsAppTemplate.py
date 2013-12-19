@@ -27,10 +27,12 @@ def getThreeJSRevision(js_url):
     match = re.search(r'{REVISION:"(.*?)"}', js)
     if match:
         revision = match.group(1)
-        print '    Revision number is ' + revision
+
+    match = re.search(r"{ REVISION: '(.*?)' }", js)
+    if match:
+        revision = match.group(1)
 
     return revision
-
 
 ###############################################################################
 def getJSFile(js_name, base_dir, js_url, use_three_js_revision, rev_number):
@@ -85,7 +87,7 @@ def writeCode(base_dir, rev_number):
             <body>
                     """) )
 
-    source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/three.min.js"></script>\n')
+    source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/' + threejs_filename + '"></script>\n')
     source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/TrackballControls.js"></script>\n')
     source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/Detector.js"></script>\n')
 
@@ -216,8 +218,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-tv', '--three_version', help='Specify version of Three.js to fetch')
     parser.add_argument('-od', '--output_dir', help='Specify name of directory to write files')
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s version: ' + version_number)
-    args = parser.parse_args();
+    parser.add_argument('-min', '--minified', dest='minified', action='store_true')
+    parser.add_argument('-nomin', '--no-minified', dest='minimied', action='store_false')
+    parser.add_argument('-v',  '--version', action='version', version='%(prog)s version: ' + version_number)
+    args = parser.parse_args()
 
     base_dir = 'three_js_app'
     
@@ -226,13 +230,22 @@ if __name__ == "__main__":
 
     print 'Project base directory is ' + base_dir
 
-    if args.three_version:
-        revision = args.three_version;
+    if args.minified == True:
+        threejs_filename = 'three.min.js'
+        print "\nFetching minified version of library"
     else:
-        latest_three_js_url = 'http://threejs.org/build/three.min.js'
-        revision = getThreeJSRevision(latest_three_js_url);
+        threejs_filename = 'three.js'
+        print "\nFetching non-minified version of library"
 
-    three_js_url = "https://raw.github.com/mrdoob/three.js/r" + revision + "/build/three.min.js"
+    if args.three_version:
+        revision = args.three_version
+    else:
+        latest_three_js_url = "http://threejs.org/build/" + threejs_filename
+        revision = getThreeJSRevision(latest_three_js_url)
+
+    print "\nRevision number is " + revision
+
+    three_js_url = "https://raw.github.com/mrdoob/three.js/r" + revision + "/build/" + threejs_filename
 
     getJSFile('Three.js (minified)', base_dir, three_js_url, True, revision)
     getJSFile('TrackballControls.js', base_dir, 'https://raw.github.com/mrdoob/three.js/master/examples/js/controls/TrackballControls.js', True, revision)

@@ -12,14 +12,19 @@ Usage:
     ./ThreeJsAppTemplate.py
 
     -h, --help
-    show this help message and exit
+    Show this help message and exit
+
+    -min, --minified
+    Fetch the minified version of Three.js
+
+    -nomin, --no-minified
+    Fetch the non-minified version of Three.js (useful for debugging)
 
     -tv <ver>, --three_version <ver>
     Specify version of Three.js to fetch (defaults to latest)
 
     -od <dir>, --output_dir <dir>
-    Specify name of directory to write files (defaults to './my_app')
+    Specify name of directory to write files (defaults to './three_js_app')
 
     -v, --version
     Display the version number of this script
-
