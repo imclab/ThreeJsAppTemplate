@@ -15,10 +15,10 @@ Usage:
     Show this help message and exit
 
     -min, --minified
-    Fetch the minified version of Three.js
+    Fetch the minified version of libraries
 
     -nomin, --no-minified
-    Fetch the non-minified version of Three.js (useful for debugging)
+    Fetch the non-minified version of libraries (useful for debugging)
 
     -tv <ver>, --three_version <ver>
     Specify version of Three.js to fetch (defaults to latest)

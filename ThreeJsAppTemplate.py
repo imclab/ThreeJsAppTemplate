@@ -90,11 +90,11 @@ def writeCode(base_dir, rev_number):
     source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/' + threejs_filename + '"></script>\n')
     source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/TrackballControls.js"></script>\n')
     source_file.write('        <script type="text/javascript" src="js/three.r' + rev_number +'/Detector.js"></script>\n')
+    source_file.write('        <script type="text/javascript" src="js/' + dat_gui_filename + '"></script>\n')
+    source_file.write('        <script type="text/javascript" src="js/' + tween_filename + '"></script>\n')
+    source_file.write('        <script type="text/javascript" src="js/' + stats_filename + '"></script>\n')
 
     source_file.write( textwrap.dedent("""\
-            <script type="text/javascript" src="js/dat.gui.min.js"></script>
-            <script type="text/javascript" src="js/tween.min.js"></script>
-            <script type="text/javascript" src="js/stats.min.js"></script>
             <script type="text/javascript">
                 var camera, scene, renderer;
                 var controls, stats;
@@ -232,10 +232,10 @@ if __name__ == "__main__":
 
     if args.minified == True:
         threejs_filename = 'three.min.js'
-        print "\nFetching minified version of library"
+        print "\nFetching minified version of libraries"
     else:
         threejs_filename = 'three.js'
-        print "\nFetching non-minified version of library"
+        print "\nFetching non-minified version of libraries"
 
     if args.three_version:
         revision = args.three_version
@@ -247,11 +247,23 @@ if __name__ == "__main__":
 
     three_js_url = "https://raw.github.com/mrdoob/three.js/r" + revision + "/build/" + threejs_filename
 
-    getJSFile('Three.js (minified)', base_dir, three_js_url, True, revision)
+    getJSFile('Three.js', base_dir, three_js_url, True, revision)
     getJSFile('TrackballControls.js', base_dir, 'https://raw.github.com/mrdoob/three.js/master/examples/js/controls/TrackballControls.js', True, revision)
-    getJSFile('Stats.js (minified)', base_dir, 'https://raw.github.com/mrdoob/stats.js/master/build/stats.min.js', False, '')
     getJSFile('Detector.js', base_dir, 'https://raw.github.com/mrdoob/three.js/master/examples/js/Detector.js', True, revision)
-    getJSFile('Tween.js', base_dir, 'https://raw.github.com/sole/tween.js/master/build/tween.min.js', False, '')
-    getJSFile('dat-gui', base_dir, 'https://dat-gui.googlecode.com/git/build/dat.gui.min.js', False, '')
+
+    if args.minified == True:
+        getJSFile('Stats.js', base_dir, 'https://raw.github.com/mrdoob/stats.js/master/build/stats.min.js', False, '')
+        stats_filename = 'stats.min.js'
+        getJSFile('Tween.js', base_dir, 'https://raw.github.com/sole/tween.js/master/build/tween.min.js', False, '')
+        tween_filename = 'tween.min.js'
+        getJSFile('dat-gui', base_dir, 'https://dat-gui.googlecode.com/git/build/dat.gui.min.js', False, '')
+        dat_gui_filename = 'dat.gui.min.js'
+    else:
+        getJSFile('Stats.js', base_dir, 'https://raw.github.com/mrdoob/stats.js/master/src/Stats.js', False, '')
+        stats_filename = 'Stats.js'
+        getJSFile('Tween.js', base_dir, 'https://raw.github.com/sole/tween.js/master/src/Tween.js', False, '')
+        tween_filename = 'Tween.js'
+        getJSFile('dat-gui', base_dir, 'https://dat-gui.googlecode.com/git/build/dat.gui.js', False, '')
+        dat_gui_filename = 'dat.gui.js'
 
     writeCode(base_dir, revision)
