@@ -21,7 +21,7 @@ def getThreeJSRevision(js_url):
     print '\nGetting Three.js revision'
 
     response = urllib2.urlopen(js_url)
-    js = response.read(128)
+    js = response.read(256)
 
     revision = 'unk'
     match = re.search(r'{REVISION:"(.*?)"}', js)
